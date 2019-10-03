@@ -6,7 +6,7 @@ public class App {
 
         Scanner scan = new Scanner(System.in); Game game = new Game('o');
 
-        Computer com = new Computer('x', false);
+        Computer comp = new Computer('x', false);
 
         System.out.println("Tic-Tac-Toe!");
         do
@@ -28,9 +28,9 @@ public class App {
 
             }
             while (!game.placeMark(row, col));
-
+            comp.setBoard(game.getBoard());
             game.changePlayer();
-            game.placeMarkByComputer();
+            comp.placeMarkByComputer();
             game.changePlayer();
         }
         while(!game.isWinner() && !game.isBoardFull());
