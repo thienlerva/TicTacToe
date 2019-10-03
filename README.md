@@ -1,7 +1,6 @@
 Tic Tac Toe Game
 
-
-Feature: I added something here too
+Dev: i add something here
 
 private static String checkRow_v2(char[][] board, char player) {
         int row = board.length;
