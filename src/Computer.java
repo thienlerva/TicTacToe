@@ -1,23 +1,101 @@
 import java.util.Random;
 
-public class Computer {
+public class Computer extends Game {
 
-    private char name;
-    boolean[][] myBoard;
-    char[][] board;
-    private boolean isMyTurn;
+    private char[][] board;
+    private char player;
 
-    public Computer(char name, boolean isMyTurn) {
-        this.name = name;
-        this.isMyTurn = isMyTurn;
-        this.myBoard = new boolean[3][3];
+    public Computer() {
+        this.board = this.getBoard();
+        this.player = this.getCurrentPlayer();
     }
+
+    public boolean isSafe(int x, int y) {
+
+        return x >= 0 & x < board.length && y >= 0 && y < board[0].length && (board[x][y]==player || board[x][y]=='-');
+    }
+    public String findRowIndex(int x, int y) {
+        char c1,c2,c3;
+
+        if(isSafe(x,y) && isSafe(x, y+1) && isSafe(x, y+2)) {
+            c1=board[x][y];
+            c2=board[x][y+1];
+            c3=board[x][y+2];
+
+            if (c1=='-' && c2==player && c3==player) {
+                return String.valueOf(x) + String.valueOf(y);
+            } else if (c1==player && c2=='-' && c3==player) {
+                return String.valueOf(x) + String.valueOf(y+1);
+            } else if (c1==player && c2==player && c3=='-') {
+                return String.valueOf(x) + String.valueOf(y+2);
+            }
+        }
+
+
+        return null;
+    }
+
+    public String findDiagonalIndex(int x, int y) {
+        char c1,c2,c3;
+        if(isSafe(x,y) && isSafe(x+1, y+1) && isSafe(x+2, y+2)) {
+            c1=board[x][y];
+            c2=board[x+1][y+1];
+            c3=board[x+2][y+2];
+
+            if (c1=='-' && c2==player && c3==player) {
+                return String.valueOf(x) + String.valueOf(y);
+            } else if (c1==player && c2=='-' && c3==player) {
+                return String.valueOf(x+1) + String.valueOf(y+1);
+            } else if (c1==player && c2==player && c3=='-') {
+                return String.valueOf(x+2) + String.valueOf(y+2);
+            }
+        }
+        return null;
+    }
+
+    public String findColumnIndex(int x, int y) {
+        char c1,c2,c3;
+
+        if(isSafe(x,y) && isSafe(x+1, y) && isSafe(x+2, y)) {
+            c1=board[x][y];
+            c2=board[x+1][y];
+            c3=board[x+2][y];
+
+            if (c1=='-' && c2==player && c3==player) {
+                return String.valueOf(x) + String.valueOf(y);
+            } else if (c1==player && c2=='-' && c3==player) {
+                return String.valueOf(x+1) + String.valueOf(y);
+            } else if (c1==player && c2==player && c3=='-') {
+                return String.valueOf(x+2) + String.valueOf(y);
+            }
+        }
+        return null;
+    }
+
+    private String isRowNearWin() {
+        for (int i=0; i<board.length;i++) {
+            for (int j=0;j<board[0].length;j++) {
+                if (findRowIndex(i, j) != null) {
+                    return findRowIndex(i, j);
+                }
+            }
+        }
+    }
+
+    private String isColumnNearWin() {
+            for (int i=0; i<board.length;i++) {
+                for (int j=0;j<board[0].length;j++) {
+                    if (findColumnIndex(i,j)!=null) {
+                        return findColumnIndex(i,j);
+                    }
+                }
+            }
 
     public void setBooleanBoard(char[][] board) {
         for(int row=0;row<3;row++) {
             for(int col=0;col<3;col++) {
 
-                if(board[row][col]==this.name || board[row][col]=='-') {
+                if(board[row][col]==this. || board[row][col]=='-') {
 
                     myBoard[row][col]=true;
                 } else {
@@ -31,110 +109,17 @@ public class Computer {
         this.board = board;
     }
 
-    private boolean checkRows() {
-        for (int row=0;row<3;row++) {
-            if (checkRowCol(board[row][0], board[row][1], board[row][2])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkColumns() {
-        for (int col=0;col<3;col++) {
-            if (checkRowCol(board[0][col], board[1][col], board[2][col])) {
-                return true;
-
-            }
-        }
-        return false;
-    }
-
-
-
-    private String checkDiagonals() {
-
-            if (checkRowCol(board[0][0], board[1][1], board[2][2])) {
-                if (board[0][0]=='-') {
-                    return "00";
-                } else if (board[1][1]=='-') {
-                    return "11";
-                } else {
-                    return "22";
-                }
-            }
-        if (checkRowCol(board[0][2], board[1][1], board[2][0])) {
-            if (board[0][0]=='-') {
-                return "00";
-            } else if (board[1][1]=='-') {
-                return "11";
-            } else {
-                return "20";
-            }
-        }
-
-        return null;
-    }
-
-    private String findRowIndex() {
-        for (int row=0;row<3;row++) {
-            if (checkRowCol(board[row][0], board[row][1], board[row][2])) {
-                if (board[row][0]=='-') {
-                    return row + "0";
-                } else if (board[row][1]=='-') {
-                    return row + "1";
-
-                } else {
-                    return row + "2";
-                }
-            }
-        }
-        return null;
-    }
-
-    private String findColumnIndex() {
-        for (int col=0;col<3;col++) {
-            if (checkRowCol(board[0][col], board[1][col], board[2][col])) {
-                if (board[0][col]=='-') {
-                    return "0" + col;
-                } else if (board[1][col]=='-') {
-                    return "1" + col;
-
-                } else {
-                    return "2" + col;
-                }
-            }
-        }
-        return null;
-    }
-
-    private boolean checkRowCol(char c1, char c2, char c3) {
-        if(c1==this.name || c2==this.name || c3==this.name) {
-            return false;
-        } else if (c1=='o' && c2=='o') {
-                return true;
-        } else if (c1=='o' && c3=='0') {
-            return true;
-        } else if (c2=='o' && c3=='o') {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOpponentNearWin() {
-        return checkRows() || checkColumns();
-    }
 
     // AI computer playing
     public void placeMarkByComputer() {
 
         boolean[][] availableSpot = findAvailableSpots();
-        if (checkRows()) {
+        if (isRowNearWin()!=null) {
             String str = findRowIndex();
             int row = Integer.valueOf(String.valueOf(str.charAt(0)));
             int col = Integer.valueOf(String.valueOf(str.charAt(1)));
             board[row][col] = this.name;
-        } else if (checkColumns()) {
+        } else if (isColumnNearWin()!=null) {
             String str = findColumnIndex();
             int row = Integer.valueOf(String.valueOf(str.charAt(0)));
             int col = Integer.valueOf(String.valueOf(str.charAt(1)));
@@ -169,29 +154,4 @@ public class Computer {
         }
     }
 
-    public boolean isBoardFull() {
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j] == '-') {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public String toString() {
-        String result = "\n-------------\n";
-
-        for(int row=0; row<3;row++) {
-            result += "| ";
-            for(int col=0;col<3;col++) {
-                result += myBoard[row][col] + " | ";
-            }
-            result += "\n-------------\n";
-        }
-        return result;
-    }
 }
