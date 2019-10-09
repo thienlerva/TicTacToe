@@ -6,8 +6,8 @@ public class Computer extends Game {
     private char player;
 
     public Computer() {
-        this.board = this.getBoard();
-        this.player = this.getCurrentPlayer();
+        this.board = super.getBoard();
+        this.player = super.getCurrentPlayer();
     }
 
     public boolean isSafe(int x, int y) {
@@ -83,13 +83,24 @@ public class Computer extends Game {
     }
 
     private String isColumnNearWin() {
-            for (int i=0; i<board.length;i++) {
-                for (int j=0;j<board[0].length;j++) {
-                    if (findColumnIndex(i,j)!=null) {
-                        return findColumnIndex(i,j);
-                    }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (findColumnIndex(i, j) != null) {
+                    return findColumnIndex(i, j);
                 }
             }
+        }
+    }
+
+    private String isDiagonalNearWin() {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (findDiagonalIndex()(i, j) != null) {
+                    return findDiagonalIndex(i, j);
+                }
+            }
+        }
+    }
 
     public void setBooleanBoard(char[][] board) {
         for(int row=0;row<3;row++) {
@@ -114,16 +125,23 @@ public class Computer extends Game {
     public void placeMarkByComputer() {
 
         boolean[][] availableSpot = findAvailableSpots();
-        if (isRowNearWin()!=null) {
-            String str = findRowIndex();
-            int row = Integer.valueOf(String.valueOf(str.charAt(0)));
-            int col = Integer.valueOf(String.valueOf(str.charAt(1)));
-            board[row][col] = this.name;
-        } else if (isColumnNearWin()!=null) {
-            String str = findColumnIndex();
-            int row = Integer.valueOf(String.valueOf(str.charAt(0)));
-            int col = Integer.valueOf(String.valueOf(str.charAt(1)));
-            board[row][col] = this.name;
+
+        String rowIndex=isRowNearWin();
+        String colIndex = isColumnNearWin();
+        String diaIndex = isDiagonalNearWin();
+        if (rowIndex!=null) {
+            int row = Integer.valueOf(String.valueOf(rowIndex.charAt(0)));
+            int col = Integer.valueOf(String.valueOf(rowIndex.charAt(1)));
+            board[row][col] = this.player;
+        } else if (colIndex!=null) {
+
+            int row = Integer.valueOf(String.valueOf(colIndex.charAt(0)));
+            int col = Integer.valueOf(String.valueOf(colIndex.charAt(1)));
+            board[row][col] = this.player;
+        } else if(diaIndex!=null) {
+            int row = Integer.valueOf(String.valueOf(diaIndex.charAt(0)));
+            int col = Integer.valueOf(String.valueOf(diaIndex.charAt(1)));
+            board[row][col] = this.player;
         } else if(availableSpot!=null) {
             Random r = new Random();
             int row, col;
@@ -131,7 +149,7 @@ public class Computer extends Game {
                 row = r.nextInt(3);
                 col = r.nextInt(3);
                 if(availableSpot[row][col]) {
-                    board[row][col] = this.name;
+                    board[row][col] = this.player;
                 }
             } while(!availableSpot[row][col]);
         }
