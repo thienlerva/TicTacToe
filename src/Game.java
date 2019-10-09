@@ -4,20 +4,20 @@ public class Game {
 
     private final char[][] board;
     private char currentPlayer;
-    private static final char[][] SAMPLE_BOARD =
-            {{'o','x','-','x'},
-                    {'x','o','o','x'},
-                    {'x','o','-','o'},
-                    {'-','-','o','o'}};
+    private static final int ROW = 3;
+           private static final int COLUMN = 3;
 
 
-    public Game(char[][] board, char player) {
-        this.board = board;
+    public Game(int row, int col, char player) {
+        this.board = new char[row][col];
         this.currentPlayer = player;
+        this.initializeBoard(row, col);
     }
 
     public Game() {
-        this(SAMPLE_BOARD, 'x');
+
+        this(ROW, COLUMN, 'x');
+        this.initializeBoard(ROW, COLUMN);
     }
 
     //Gives us access to currentPlayerMark
@@ -32,13 +32,13 @@ public class Game {
 
 
     // Set/Reset the board back to all empty values.
-    public void initializeBoard() {
+    public void initializeBoard(int row, int col) {
 
         // Loop through rows
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < row; i++) {
 
             // Loop through columns
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < col; j++) {
                 board[i][j] = '-';
             }
         }
@@ -80,7 +80,7 @@ public class Game {
     // Returns true if there is a win, false otherwise.
 // This calls our other win check functions to check the entire board.
 
-        public boolean isWin() {
+        public boolean isWinner() {
             for(int i=0;i<board.length;i++) {
                 for(int j=0;j<board[i].length;j++) {
                     if(checkRow(i,j) || checkColumn(i,j) || checkDiagonal(i,j)) {
@@ -166,43 +166,6 @@ public class Game {
 
         return false;
     }
-
-
-    // AI computer playing
-    public void placeMarkByComputer() {
-        boolean[][] availableSpot = findAvailableSpots();
-        if(availableSpot!=null) {
-            Random r = new Random();
-            int row, col;
-            do {
-                row = r.nextInt(3);
-                col = r.nextInt(3);
-                if(availableSpot[row][col]) {
-                    board[row][col] = this.currentPlayer;
-                }
-            } while(!availableSpot[row][col]);
-        }
-    }
-
-    private boolean[][] findAvailableSpots() {
-        if(!isBoardFull()) {
-            boolean[][] spot = new boolean[3][3];
-
-            for(int row=0; row<3; row++) {
-                for(int col=0; col<3; col++) {
-                    if(board[row][col]=='-') {
-                        spot[row][col] = true;
-                    }
-                }
-            }
-            return spot;
-        } else {
-            return null;
-        }
-    }
-
-
-
 
     public String toString() {
         String result = "\n-------------\n";

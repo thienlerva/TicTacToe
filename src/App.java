@@ -4,9 +4,11 @@ public class App {
 
     public static void main(String args[]) {
 
-        Scanner scan = new Scanner(System.in); Game game = new Game('o');
+        Scanner scan = new Scanner(System.in);
 
-        Computer comp = new Computer('x', false);
+        Game game = new Game();
+
+        Computer comp = new Computer();
 
         System.out.println("Tic-Tac-Toe!");
         do
@@ -28,8 +30,8 @@ public class App {
 
             }
             while (!game.placeMark(row, col));
-            comp.setBoard(game.getBoard());
             game.changePlayer();
+            comp.setBoard(game.getBoard(), game.getCurrentPlayer());
             comp.placeMarkByComputer();
             game.changePlayer();
         }
